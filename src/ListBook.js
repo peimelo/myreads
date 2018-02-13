@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
+import BookAuthors from './BookAuthors'
 import BookShelfChanger from './BookShelfChanger'
 
 class ListBook extends Component {
   static propTypes = {
     books: PropTypes.array.isRequired,
-  //   updateBook: PropTypes.func.isRequired
+    onChangeShelf: PropTypes.func.isRequired
   };
 
-  updateBook = (book, shelf) => {
-    this.props.onChangeShelf(book, shelf)
-  }
-
   render() {
-    const { books } = this.props;
+    const { books, onChangeShelf } = this.props;
 
     return (
       <div className="bookshelf-books">
@@ -26,13 +23,15 @@ class ListBook extends Component {
                     width: 128,
                     height: 193,
                     backgroundImage: `url(${book.imageLinks.thumbnail})`
-                  }}></div>
+                  }}>
+                  </div>
                   <BookShelfChanger
-                    book={book}
-                    shelfChange={this.updateBook}/>
+                    bookShelf={book.shelf}
+                    shelfChange={(shelf) => onChangeShelf(book, shelf)}
+                  />
                 </div>
                 <div className="book-title">{book.title}</div>
-                <div className="book-authors">{book.authors}</div>
+                <BookAuthors authors={book.authors}/>
               </div>
             </li>
           ))}
