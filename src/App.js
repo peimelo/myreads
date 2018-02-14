@@ -1,100 +1,71 @@
 import React from 'react'
+import { Route, Link } from 'react-router-dom'
 import BookShelf from './BookShelf'
+import SearchBooks from './SearchBooks'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 
-class BooksApp extends React.Component {
-  state = {
-    books: [],
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-    showSearchPage: false
-  };
+class App extends React.Component {
+  state = { books: [] };
 
   componentDidMount() {
     this.getAll()
   }
 
   getAll = () => {
-    BooksAPI.getAll().then((books) => {
-      this.setState({ books });
-    })
+    BooksAPI.getAll().then((books) => this.setState({ books }))
   };
 
   getBooksByShelf = (shelf) => {
-    return this.state.books.filter((book) => {
-      return book.shelf === shelf
-    })
+    return this.state.books.filter((book) => book.shelf === shelf)
   };
 
   updateBook = (book, shelf) => {
-    BooksAPI.update(book, shelf).then(() => {
-      this.getAll()
-    })
+    BooksAPI.update(book, shelf).then(() => this.getAll())
   };
 
   render() {
+    const shelfs = [
+      { name: 'currentlyReading', title: 'Currently Reading' },
+      { name: 'wantToRead', title: 'Want to Read' },
+      { name: 'read', title: 'Read' }
+    ];
+
     return (
       <div className="app">
-        {this.state.showSearchPage ? (
-          <div className="search-books">
-            <div className="search-books-bar">
-              <a className="close-search"
-                 onClick={() => this.setState({ showSearchPage: false })}>Close</a>
-              <div className="search-books-input-wrapper">
-                {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
-                <input type="text" placeholder="Search by title or author"/>
-
-              </div>
-            </div>
-            <div className="search-books-results">
-              <ol className="books-grid"></ol>
-            </div>
-          </div>
-        ) : (
+        <Route exact path="/" render={() => (
           <div className="list-books">
             <div className="list-books-title">
               <h1>MyReads</h1>
             </div>
             <div className="list-books-content">
               <div>
-                <BookShelf
-                  books={this.getBooksByShelf('currentlyReading')}
-                  title="Currently Reading"
-                  onChangeShelf={this.updateBook}
-                />
-                <BookShelf
-                  books={this.getBooksByShelf('wantToRead')}
-                  title="Want to Read"
-                  onChangeShelf={this.updateBook}
-                />
-                <BookShelf
-                  books={this.getBooksByShelf('read')}
-                  title="Read"
-                  onChangeShelf={this.updateBook}
-                />
+                {shelfs.map((shelf, i) => (
+                  <BookShelf
+                    key={i}
+                    books={this.getBooksByShelf(shelf.name)}
+                    onChangeShelf={this.updateBook}
+                    title={shelf.title}
+                  />
+                ))}
               </div>
             </div>
             <div className="open-search">
-              <a onClick={() => this.setState({ showSearchPage: true })}>Add a
-                book</a>
+              <Link to="/search">
+                Add a book
+              </Link>
             </div>
           </div>
-        )}
+        )}/>
+        <Route path="/search" render={({ history }) => (
+          <SearchBooks
+            myBooks={this.state.books}
+            onChangeShelf={this.updateBook}
+          />
+        )}/>
       </div>
     )
   }
 }
 
-export default BooksApp
+export default App
