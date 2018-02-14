@@ -6,6 +6,7 @@ import BookShelfChanger from './BookShelfChanger'
 class ListBooks extends Component {
   static propTypes = {
     books: PropTypes.array.isRequired,
+    myBooks: PropTypes.array,
     onChangeShelf: PropTypes.func.isRequired
   };
 
@@ -15,7 +16,7 @@ class ListBooks extends Component {
     if (findedBook.length === 1) {
       return findedBook[0].shelf
     } else {
-      return "none"
+      return 'none'
     }
   };
 
@@ -36,18 +37,17 @@ class ListBooks extends Component {
                 </div>
                 <BookShelfChanger
                   bookShelf={book.shelf || this.getShelf(book)}
-                  search={this.props.search}
                   shelfChange={(shelf) => onChangeShelf(book, shelf)}
                 />
               </div>
               <div className="book-title">{book.title}</div>
-              <BookAuthors authors={book.authors}/>
+              <BookAuthors authors={book.authors} />
             </div>
           </li>
         ))}
       </ol>
-    )
+    );
   }
 }
 
-export default ListBooks;
+export default ListBooks

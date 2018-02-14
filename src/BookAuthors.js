@@ -1,15 +1,15 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-class BookAuthors extends Component {
-  render() {
-    return (
-      <div className="book-authors">
-        {this.props.authors && this.props.authors.map((author, i) => (
-          <span key={i}>{author}<br /></span>
-        ))}
-      </div>
-    )
-  }
+function BookAuthors({ authors }) {
+  return (
+    <div className="book-authors">
+      {authors && authors.map((author) => (
+        <span key={author}>
+          {author}<br/>
+        </span>
+      ))}
+    </div>
+  );
 }
 
-export default BookAuthors;
+export default BookAuthors

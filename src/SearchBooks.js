@@ -9,11 +9,9 @@ class SearchBooks extends Component {
     query: ''
   };
 
-  updateQuery = (query) => {
-    this.setState({ query });
-
-    if (query) {
-      BooksAPI.search(query).then((books) => {
+  search = () => {
+    if (this.state.query) {
+      BooksAPI.search(this.state.query).then((books) => {
         if (books && books.length) {
           this.setState({ books })
         } else {
@@ -23,6 +21,11 @@ class SearchBooks extends Component {
     } else {
       this.setState({ books: [] })
     }
+  };
+
+  updateQueryAndSearch = (query) => {
+    this.setState({ query });
+    this.search();
   };
 
   render() {
@@ -39,7 +42,7 @@ class SearchBooks extends Component {
               type="text"
               placeholder="Search by title or author"
               value={query}
-              onChange={(event) => this.updateQuery(event.target.value)}
+              onChange={(event) => this.updateQueryAndSearch(event.target.value)}
             />
           </div>
         </div>
@@ -47,12 +50,11 @@ class SearchBooks extends Component {
           <ListBooks
             books={this.state.books}
             myBooks={this.props.myBooks}
-            fromSearchPage={true}
             onChangeShelf={this.props.onChangeShelf}
           />
         </div>
       </div>
-    )
+    );
   }
 }
 
