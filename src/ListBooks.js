@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types'
-import BookAuthors from './BookAuthors'
-import BookShelfChanger from './BookShelfChanger'
+import PropTypes from 'prop-types';
+
+import BookAuthors from './BookAuthors';
+import BookShelfChanger from './BookShelfChanger';
 
 class ListBooks extends Component {
   static propTypes = {

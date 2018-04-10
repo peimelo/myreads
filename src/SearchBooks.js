@@ -1,5 +1,7 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import _ from 'lodash';
+
 import * as BooksAPI from './BooksAPI'
 import ListBooks from './ListBooks'
 
@@ -9,7 +11,7 @@ class SearchBooks extends Component {
     query: ''
   };
 
-  search = () => {
+  search = _.debounce(() => {
     if (this.state.query) {
       BooksAPI.search(this.state.query).then((books) => {
         if (books && books.length) {
@@ -21,7 +23,7 @@ class SearchBooks extends Component {
     } else {
       this.setState({ books: [] })
     }
-  };
+  }, 1000);
 
   updateQueryAndSearch = (query) => {
     this.setState({ query });
